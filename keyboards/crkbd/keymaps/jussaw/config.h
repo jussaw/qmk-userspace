@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TAP_CODE_DELAY 50
 #define TAPPING_TERM 200
 #define QUICK_TAP_TERM 0
-#define PERMISSIVE_HOLD_PER_KEY
+#define PERMISSIVE_HOLD
 
 /* Mouse key speed and acceleration. */
 #undef MOUSEKEY_DELAY

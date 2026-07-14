@@ -35,7 +35,7 @@ enum layers {
 #define UP_MAC MO(_UPPER_MAC)
 #define ADJUST MO(_ADJUST)
 #define SETTING MO(_SETTINGS)
-#define DF_QWRT DF(_DEFAULT)
+#define DF_DEF  DF(_DEFAULT)
 #define TO_DEF TO(_DEFAULT)
 #define TO_MAC TO(_MAC)
 #define TG_GAME TG(_GAME)
@@ -128,6 +128,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;  // Process all other keycodes normally
 }
 
+layer_state_t layer_state_set_user(layer_state_t state) {
+    // leaving the game layer while A/D is held would leave the SOCD flags
+    // stale and re-register a phantom key on the next game session
+    if (!layer_state_cmp(state, _GAME)) {
+        if (a_pressed) {
+            unregister_code(KC_A);
+            a_pressed = false;
+        }
+        if (d_pressed) {
+            unregister_code(KC_D);
+            d_pressed = false;
+        }
+    }
+    return state;
+}
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   /* Default
@@ -197,7 +213,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    */
   [_UPPER] = LAYOUT_split_3x6_3(
        KC_TAB,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,       KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  SETTING,
-       KC_F11, F1_LCTL, F2_LALT, F3_LGUI, F4_LSFT,   KC_F5,     KC_INS, KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, KC_BSLS,
+       KC_F11, F1_LGUI, F2_LALT, F3_LCTL, F4_LSFT,   KC_F5,     KC_INS, KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, KC_BSLS,
        KC_F12,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,    KC_PSCR, KC_HOME, KC_PGDN, KC_PGUP,  KC_END,  KC_ENT,
                                  KC_HYPR,  ADJUST,  KC_SPC,    KC_BSPC, KC_TRNS, XXXXXXX
   ),
@@ -206,7 +222,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * ,-----------------------------------------------------.  ,-----------------------------------------------------.
    * |  Tab   |    1   |    2   |    3   |    4   |    5   |  |    6   |    7   |    8   |    9   |    0   |SETTINGS|
    * |--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
-   * |   F11  |F1,LGUI |F2,LALT |F3,LCTL |F4,LSFT |   F5   |  |  Ins   |  Left  |  Down  |   Up   | Right  |   \    |
+   * |   F11  |F1,LCTL |F2,LALT |F3,LGUI |F4,LSFT |   F5   |  |  Ins   |  Left  |  Down  |   Up   | Right  |   \    |
    * +--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
    * |   F12  |   F6   |   F7   |   F8   |   F9   |  F10   |  |PrntScrn|  Home  |Pg Down | Pg Up  |  End   | Enter  |
    * `--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------'
@@ -215,7 +231,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    */
   [_UPPER_MAC] = LAYOUT_split_3x6_3(
        KC_TAB,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,       KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  SETTING,
-       KC_F11, F1_LGUI, F2_LALT, F3_LCTL, F4_LSFT,   KC_F5,     KC_INS, KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, KC_BSLS,
+       KC_F11, F1_LCTL, F2_LALT, F3_LGUI, F4_LSFT,   KC_F5,     KC_INS, KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, KC_BSLS,
        KC_F12,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,    KC_PSCR, KC_HOME, KC_PGDN, KC_PGUP,  KC_END,  KC_ENT,
                                  KC_HYPR,  ADJUST,  KC_SPC,    KC_BSPC, KC_TRNS, XXXXXXX
   ),
@@ -224,7 +240,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * ,-----------------------------------------------------.  ,-----------------------------------------------------.
    * |  RESET |        |        |        |        |        |  |  Play  |  Prev  |  Next  |        |        |        |
    * |--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
-   * |DF(QWRT)|        |        | Mouse2 | Mouse1 |        |  |  Vol+  |Ms Left |Ms Down | Ms Up  |Ms Right|        |
+   * |DF(DEF) |        |        | Mouse2 | Mouse1 |        |  |  Vol+  |Ms Left |Ms Down | Ms Up  |Ms Right|        |
    * |--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
    * |        |        |        | Mouse4 | Mouse5 |        |  |  Vol-  | WhlLft | WhlDwn | WhlUp  | WhlRgt |        |
    * `--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------'
@@ -233,7 +249,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    */
   [_ADJUST] = LAYOUT_split_3x6_3(
       QK_BOOT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     KC_MPLY, KC_MPRV, KC_MNXT, XXXXXXX, XXXXXXX, XXXXXXX,
-      DF_QWRT, XXXXXXX, XXXXXXX, MS_BTN2, MS_BTN1, XXXXXXX,     KC_VOLU, MS_LEFT, MS_DOWN,   MS_UP, MS_RGHT, XXXXXXX,
+       DF_DEF, XXXXXXX, XXXXXXX, MS_BTN2, MS_BTN1, XXXXXXX,     KC_VOLU, MS_LEFT, MS_DOWN,   MS_UP, MS_RGHT, XXXXXXX,
       XXXXXXX, XXXXXXX, XXXXXXX, MS_BTN4, MS_BTN5, XXXXXXX,     KC_VOLD, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR, XXXXXXX,
                                  KC_HYPR, KC_TRNS, XXXXXXX,     XXXXXXX, KC_TRNS, XXXXXXX
   ),
