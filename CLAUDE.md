@@ -10,8 +10,8 @@ keymaps for *existing* boards live here — per commit `caa7156`, adding a brand
 of scope (that would require a `qmk_firmware` fork). Everything under `keyboards/<kb>/keymaps/jussaw/`
 mirrors the path it would occupy inside `qmk_firmware`.
 
-`users/` and `layouts/` are empty `.keep` placeholders — there is **no shared userspace C code**; each
-board's `keymap.c` is fully standalone.
+`users/jussaw/` holds the **shared userspace** — one source of truth every keyed board references
+(see the Keymap architecture section). `layouts/` is still an empty `.keep` placeholder.
 
 ## Build & compile
 
@@ -34,33 +34,45 @@ to build all `qmk.json` targets on every push and publish firmware to the repo's
 
 ## Keymap architecture (the cross-file part worth knowing)
 
-All four `jussaw` keymaps share a layer scheme — **base + Lower (symbols) + Upper/Raise (numbers /
-nav / F-keys) + Adjust (media, mouse, `QK_BOOT`) + Game** — where Adjust is reached by holding Lower
-and Upper together. Beyond that, they diverge in ways that matter:
+**crkbd is the single source of truth.** Its layout — **Colemak-DH** base with **home-row mods** in
+GACS order (GUI/Alt/Ctrl/Shift via `LxyZ_T()` macros), plus `_LOWER` (symbols) / `_UPPER` (numbers /
+nav / F-keys) / `_ADJUST` (media, mouse, `QK_BOOT`) / `_SETTINGS` (holds `TG_GAME`) / `_GAME` — is
+shared by every keyed board through the `users/jussaw/` userspace. QMK auto-compiles `users/jussaw/`
+for any keymap named `jussaw` (its `rules.mk`/`config.h` are force-included; `SRC += jussaw.c` is
+explicit because this QMK version does not auto-add it). Adjust is reached by overlaying `MO(_ADJUST)`
+on the opposite layer key while Lower or Upper is held (no tri-layer).
 
-- **crkbd is the flagship and the most customized.** Its base (`_DEFAULT`) is **Colemak-DH**, not
-  QWERTY, with **home-row mods** in GACS order (GUI/Alt/Ctrl/Shift via `LxyZ_T()` macros). It adds a
-  `_MAC` / `_UPPER_MAC` pair that swaps GUI↔Ctrl for macOS, and a `_SETTINGS` layer that switches
-  layers via `TO()` / `DF()` / `TG()` (not persistent — nothing here writes the default layer to
-  EEPROM).
-- **planck and charybdis base layers are plain QWERTY** (`enum _QWERTY`) with no home-row mods — do
-  not assume the crkbd conventions carry over.
-- **crkbd `process_record_user`** does two non-obvious things: (1) re-emits `KC_SCRL` / `KC_NUM` as
-  taps so those locks behave *momentarily*, and (2) in the Game layer implements **SOCD** (last-input-
-  priority) cleaning for the `A`/`D` keys.
-- **Ploopy trackball_nano has a dummy keymap** (`{{ KC_NO }}`) — it has no keys. All behavior is
-  host-LED-driven in `led_update_user`: the scroll-lock LED toggles drag-scroll, num-lock cycles DPI,
-  and all three locks together reset to bootloader. This is why the crkbd's momentary SCRL/NUM taps
-  above exist — they drive this trackball. `keymap.c` also has ADNS5050 power-down/wake hooks;
-  drag-scroll is inverted via `PLOOPY_DRAGSCROLL_INVERT` in `config.h`.
-- **charybdis** keeps trackball DPI/sniping constants at the top of `keymap.c` and uses
-  `S_D_MOD` / `DPI_MOD` / `DRGSCRL` / `SNIPING` keycodes on its Lower layer.
-- **planck `keymap.c`** still carries the upstream default's Muse/MIDI/encoder/dip-switch boilerplate
-  (hence `SRC += muse.c` in its `rules.mk`); treat it as inherited scaffolding, not bespoke design.
+The shared pieces:
 
-Per-keymap `config.h` holds the tuning (tapping term, `PERMISSIVE_HOLD_PER_KEY`, `MASTER_LEFT`, fast
-low-accel mousekey settings); per-keymap `rules.mk` toggles hardware features (crkbd disables OLED/RGB,
-enables MOUSEKEY, sets `atmel-dfu`).
+- **`users/jussaw/jussaw.h`** — the layer `enum` and every keycode alias (home-row mods, layer keys,
+  Lower/Upper mod-taps). **`wrappers.h`** — the actual keymap content as per-layer, per-half **row
+  macros** (`JW_DEF_L1`…`JW_GAM_R3`). Physical matrices differ, so QMK cannot share one `keymaps[]`
+  array; instead each board feeds these row macros into its own `LAYOUT_*` via a
+  `LAYOUT_*_wrapper(...)` indirection (forces macro expansion before the arg count is checked) and
+  supplies only its own thumb/bottom row. **`jussaw.c`** — `process_record_user` (Game-layer `A`/`D`
+  **SOCD** last-input-priority cleaning + momentary `KC_SCRL`/`KC_NUM` re-emit) and
+  `layer_state_set_user` (stale-SOCD cleanup). **`config.h`** — shared tuning (`TAPPING_TERM`,
+  `QUICK_TAP_TERM`, `PERMISSIVE_HOLD`, `TAP_CODE_DELAY 50`, fast low-accel mousekey), included before
+  each board's own `config.h` so a board can `#undef`/override.
+
+Board-local specifics (in each board's own `keymap.c`/`config.h`/`rules.mk`):
+
+- **crkbd** is the reference (its rows are copied verbatim into `wrappers.h`); `config.h` keeps only
+  `MASTER_LEFT`.
+- **charybdis** has only 5 thumb keys, so it defines two local overrides: the trackball keycodes
+  (`S_D_MOD`/`DPI_MOD`/`DRGSCRL`/`SNIPING`/`S_D_RMOD`/`DPI_RMOD`) replace the mouse/lock cluster on
+  the Lower-left, and Backspace stays on the Default R1 edge (no room for a Bksp thumb). Its
+  `config.h` raises `TAP_CODE_DELAY` to 100 and holds the `CHARYBDIS_*` DPI constants; `rules.mk`
+  disables `MAGIC`/`GRAVE_ESC`/`SPACE_CADET` to fit the Elite-C's 28 KB flash.
+- **planck** has no thumb cluster, so its 12-wide bottom row carries the crkbd thumb functions. Its
+  upstream Muse/MIDI/encoder/dip-switch scaffolding has been **removed** (no more `SRC += muse.c`;
+  `rules.mk` now just enables `MOUSEKEY`).
+- **Ploopy trackball_nano keeps a dummy keymap** (`{{ KC_NO }}`) — no keys, so it is **out of scope**
+  for the shared layout (it still compiles `users/jussaw/`, but those hooks are inert there). All
+  behavior is host-LED-driven in `led_update_user`: scroll-lock toggles drag-scroll, num-lock cycles
+  DPI, all three locks reset to bootloader — driven over the wire by the crkbd's momentary SCRL/NUM
+  taps. `keymap.c` also has ADNS5050 power-down/wake hooks; drag-scroll is inverted via
+  `PLOOPY_DRAGSCROLL_INVERT` in its `config.h`.
 
 ## Commit messages
 
@@ -77,8 +89,9 @@ always **with a scope**:
 
 - **type** — one of `feat`, `fix`, `build`, `chore`, `ci`, `docs`, `style`, `refactor`, `perf`, `test`.
 - **scope** — the area touched, in parentheses (required here). Prefer the board:
-  `crkbd`, `planck`, `ploopyco`, `charybdis`. Use `qmk` for `qmk.json` build targets, `ci` for the
-  workflow, `devcontainer`/`clangd`/`clang-format` for tooling, `repo` for cross-cutting changes.
+  `crkbd`, `planck`, `ploopyco`, `charybdis`. Use `users` for the shared `users/jussaw/` userspace,
+  `qmk` for `qmk.json` build targets, `ci` for the workflow, `devcontainer`/`clangd`/`clang-format`
+  for tooling, `repo` for cross-cutting changes.
 - **description** — imperative mood, lower-case, no trailing period.
 - A breaking change is marked with `!` before the colon (e.g. `feat(crkbd)!: ...`) and/or a
   `BREAKING CHANGE:` footer.
