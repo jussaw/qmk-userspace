@@ -20,7 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-/* Mod Tap */
+/* Mod Tap — override the shared default (users/jussaw/config.h sets 50). */
+#undef TAP_CODE_DELAY
 #define TAP_CODE_DELAY 100
 
 /* Trackball Settings
