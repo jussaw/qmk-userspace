@@ -20,10 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 enum layers {
     _DEFAULT,
-    _MAC,
     _LOWER,
     _UPPER,
-    _UPPER_MAC,
     _ADJUST,
     _SETTINGS,
     _GAME,
@@ -32,12 +30,8 @@ enum layers {
 /* Layer Keys */
 #define LOWER MO(_LOWER)
 #define UPPER MO(_UPPER)
-#define UP_MAC MO(_UPPER_MAC)
 #define ADJUST MO(_ADJUST)
 #define SETTING MO(_SETTINGS)
-#define DF_DEF  DF(_DEFAULT)
-#define TO_DEF TO(_DEFAULT)
-#define TO_MAC TO(_MAC)
 #define TG_GAME TG(_GAME)
 
 /* Mod Tap Keys for Default Layer */
@@ -50,12 +44,6 @@ enum layers {
 #define I_RALT RALT_T(KC_I)
 #define O_RGUI RGUI_T(KC_O)
 
-/* Mod Tap Keys for Mac Layer */
-#define A_LCTL LCTL_T(KC_A)
-#define S_LGUI LGUI_T(KC_S)
-#define E_RGUI RGUI_T(KC_E)
-#define O_RCTL RCTL_T(KC_O)
-
 /* Mod Tap Keys for Lower Layer */
 #define MIN_RSFT RSFT_T(KC_MINS)
 #define EQL_RCTL RCTL_T(KC_EQL)
@@ -67,10 +55,6 @@ enum layers {
 #define F2_LALT LALT_T(KC_F2)
 #define F3_LCTL LCTL_T(KC_F3)
 #define F4_LSFT LSFT_T(KC_F4)
-
-/* Mod Tap Keys for Upper Mac Layer */
-#define F1_LCTL LCTL_T(KC_F1)
-#define F3_LGUI LGUI_T(KC_F3)
 
 
 static bool a_pressed = false;
@@ -164,24 +148,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                  KC_HYPR,   LOWER,  KC_SPC,    KC_BSPC,   UPPER, XXXXXXX
   ),
 
-  /* Mac
-   * ,-----------------------------------------------------.  ,-----------------------------------------------------.
-   * |  Tab   |    Q   |    W   |    F   |    P   |    B   |  |    J   |    L   |    U   |    Y   |    ;   |  Del   |
-   * |--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
-   * |  Esc   | A,LGUI | R,LALT | S,LCTL | T,LSFT |    G   |  |    M   | N,RSFT | E,RCTL | I,RALT | O,RGUI |   ""   |
-   * |--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
-   * |  CAPS  |    Z   |    X   |    C   |    D   |    V   |  |    K   |    H   |    ,   |    .   |    /   | Enter  |
-   * `--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------'
-   *                            |  Hyper | Lower  | Space  |  |  Bksp  | Upper  |        |
-   *                            `--------------------------'  `--------------------------'
-   */
-  [_MAC] = LAYOUT_split_3x6_3(
-       KC_TAB,    KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,       KC_J,    KC_L,    KC_U,    KC_Y, KC_SCLN,  KC_DEL,
-       KC_ESC,  A_LCTL,  R_LALT,  S_LGUI,  T_LSFT,    KC_G,       KC_M,  N_RSFT,  E_RGUI,  I_RALT,  O_RCTL, KC_QUOT,
-      KC_CAPS,    KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,       KC_K,    KC_H, KC_COMM,  KC_DOT, KC_SLSH,  KC_ENT,
-                                 KC_HYPR,   LOWER,  KC_SPC,    KC_BSPC,  UP_MAC, XXXXXXX
-  ),
-
   /* Lower
    * ,-----------------------------------------------------.  ,-----------------------------------------------------.
    * |  Tab   |    !   |    @   |    #   |    $   |    %   |  |    ^   |    &   |    *   |    (   |    )   |  Del   |
@@ -218,29 +184,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                  KC_HYPR,  ADJUST,  KC_SPC,    KC_BSPC, KC_TRNS, XXXXXXX
   ),
 
-  /* Upper Mac
-   * ,-----------------------------------------------------.  ,-----------------------------------------------------.
-   * |  Tab   |    1   |    2   |    3   |    4   |    5   |  |    6   |    7   |    8   |    9   |    0   |SETTINGS|
-   * |--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
-   * |   F11  |F1,LCTL |F2,LALT |F3,LGUI |F4,LSFT |   F5   |  |  Ins   |  Left  |  Down  |   Up   | Right  |   \    |
-   * +--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
-   * |   F12  |   F6   |   F7   |   F8   |   F9   |  F10   |  |PrntScrn|  Home  |Pg Down | Pg Up  |  End   | Enter  |
-   * `--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------'
-   *                            |  Hyper | Adjust | Space  |  |  Bksp  | Trans  |        |
-   *                            `--------------------------'  `--------------------------'
-   */
-  [_UPPER_MAC] = LAYOUT_split_3x6_3(
-       KC_TAB,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,       KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  SETTING,
-       KC_F11, F1_LCTL, F2_LALT, F3_LGUI, F4_LSFT,   KC_F5,     KC_INS, KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, KC_BSLS,
-       KC_F12,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,    KC_PSCR, KC_HOME, KC_PGDN, KC_PGUP,  KC_END,  KC_ENT,
-                                 KC_HYPR,  ADJUST,  KC_SPC,    KC_BSPC, KC_TRNS, XXXXXXX
-  ),
-
   /* Adjust
    * ,-----------------------------------------------------.  ,-----------------------------------------------------.
    * |  RESET |        |        |        |        |        |  |  Play  |  Prev  |  Next  |        |        |        |
    * |--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
-   * |DF(DEF) |        |        | Mouse2 | Mouse1 |        |  |  Vol+  |Ms Left |Ms Down | Ms Up  |Ms Right|        |
+   * |        |        |        | Mouse2 | Mouse1 |        |  |  Vol+  |Ms Left |Ms Down | Ms Up  |Ms Right|        |
    * |--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
    * |        |        |        | Mouse4 | Mouse5 |        |  |  Vol-  | WhlLft | WhlDwn | WhlUp  | WhlRgt |        |
    * `--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------'
@@ -249,16 +197,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    */
   [_ADJUST] = LAYOUT_split_3x6_3(
       QK_BOOT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     KC_MPLY, KC_MPRV, KC_MNXT, XXXXXXX, XXXXXXX, XXXXXXX,
-       DF_DEF, XXXXXXX, XXXXXXX, MS_BTN2, MS_BTN1, XXXXXXX,     KC_VOLU, MS_LEFT, MS_DOWN,   MS_UP, MS_RGHT, XXXXXXX,
+      XXXXXXX, XXXXXXX, XXXXXXX, MS_BTN2, MS_BTN1, XXXXXXX,     KC_VOLU, MS_LEFT, MS_DOWN,   MS_UP, MS_RGHT, XXXXXXX,
       XXXXXXX, XXXXXXX, XXXXXXX, MS_BTN4, MS_BTN5, XXXXXXX,     KC_VOLD, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR, XXXXXXX,
                                  KC_HYPR, KC_TRNS, XXXXXXX,     XXXXXXX, KC_TRNS, XXXXXXX
   ),
 
   /* Settings
    * ,-----------------------------------------------------.  ,-----------------------------------------------------.
-   * |        |        |        |        |        |TO(DEF) |  |        |        |        |        |        | Trans  |
+   * |        |        |        |        |        |        |  |        |        |        |        |        | Trans  |
    * |--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
-   * |        |        |        |        |        |TO(MAC) |  |        |        |        |        |        |        |
+   * |        |        |        |        |        |        |  |        |        |        |        |        |        |
    * +--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
    * |        |        |        |        |        |TG(GAME)|  |        |        |        |        |        |        |
    * `--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------'
@@ -266,8 +214,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    *                            `--------------------------'  `--------------------------'
    */
   [_SETTINGS] = LAYOUT_split_3x6_3(
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  TO_DEF,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_TRNS,
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  TO_MAC,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_TRNS,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TG_GAME,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                                  XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, KC_TRNS, XXXXXXX
   ),
