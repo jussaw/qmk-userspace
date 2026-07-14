@@ -24,25 +24,11 @@ enum charybdis_keymap_layers {
     _GAME,
 };
 
-enum custom_keycodes {
-    QWERTY = SAFE_RANGE,
-    LOWER,
-    UPPER,
-    ADJUST,
-    TG_GAME
-};
-
 /* Layer Keys */
 #define LOWER MO(_LOWER)
 #define UPPER MO(_UPPER)
 #define ADJUST MO(_ADJUST)
 #define TG_GAME TG(_GAME)
-
-/* Trackball Settings */
-#define CHARYBDIS_MINIMUM_DEFAULT_DPI 400
-#define CHARYBDIS_DEFAULT_DPI_CONFIG_STEP 200
-#define CHARYBDIS_MINIMUM_SNIPING_DPI 200
-#define CHARYBDIS_SNIPING_DPI_CONFIG_STEP 100
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -96,7 +82,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    */
        KC_TAB,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,       KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_BSPC,
        KC_F11,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,     KC_INS, KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT,  KC_DEL,
-       KC_F12,   KC_F5,   KC_F7,   KC_F8,   KC_F9,  KC_F10,    KC_PSCR, KC_HOME, KC_PGDN, KC_PGUP,  KC_END,  KC_ENT,
+       KC_F12,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,    KC_PSCR, KC_HOME, KC_PGDN, KC_PGUP,  KC_END,  KC_ENT,
                                  KC_LCTL,  ADJUST, KC_LALT,    KC_RSFT, KC_TRNS
   ),
   [_ADJUST] = LAYOUT(

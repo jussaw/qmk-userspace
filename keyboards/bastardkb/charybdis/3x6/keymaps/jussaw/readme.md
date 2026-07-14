@@ -1,7 +1,5 @@
-# Charybdis Mini (3x6) default keymap
+# jussaw's Charybdis 3x6 keymap
 
-> :bulb: Have a look at the [`via` keymap](../via) for a more feature-rich layout.
-
-The Charydbis Mini (3x6) default keymap is inspired from the original [Dactyl Manuform](../../../../../handwired/dactyl_manuform) default keymap.
-
-This layout supports RGB matrix. However, due to space constraints on the MCU, only a limited number of effect can be enabled at once. Look at the `config.h` file and enable your favorite effect.
+QWERTY base with Lower (symbols + trackball DPI/sniping/drag-scroll keys),
+Upper (numbers, F-keys, nav), Adjust (media, `QK_BOOT`; hold Lower + Upper),
+and a toggleable Game layer with mouse keys on the right half.

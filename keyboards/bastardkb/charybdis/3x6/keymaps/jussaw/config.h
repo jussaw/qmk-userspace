@@ -18,5 +18,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#pragma once
+
 /* Mod Tap */
 #define TAP_CODE_DELAY 100
+
+/* Trackball Settings
+ * Live here (not in keymap.c) so they reach the keyboard's own charybdis.c
+ * translation unit — config.h is force-included into every source file for
+ * this build. */
+#define CHARYBDIS_MINIMUM_DEFAULT_DPI 400
+#define CHARYBDIS_DEFAULT_DPI_CONFIG_STEP 200
+#define CHARYBDIS_MINIMUM_SNIPING_DPI 200
+#define CHARYBDIS_SNIPING_DPI_CONFIG_STEP 100
