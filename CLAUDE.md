@@ -40,8 +40,9 @@ and Upper together. Beyond that, they diverge in ways that matter:
 
 - **crkbd is the flagship and the most customized.** Its base (`_DEFAULT`) is **Colemak-DH**, not
   QWERTY, with **home-row mods** in GACS order (GUI/Alt/Ctrl/Shift via `LxyZ_T()` macros). It adds a
-  `_MAC` / `_UPPER_MAC` pair that swaps GUI↔Ctrl for macOS, and a `_SETTINGS` layer that switches the
-  persistent default layer via `TO()` / `DF()` / `TG()`.
+  `_MAC` / `_UPPER_MAC` pair that swaps GUI↔Ctrl for macOS, and a `_SETTINGS` layer that switches
+  layers via `TO()` / `DF()` / `TG()` (not persistent — nothing here writes the default layer to
+  EEPROM).
 - **planck and charybdis base layers are plain QWERTY** (`enum _QWERTY`) with no home-row mods — do
   not assume the crkbd conventions carry over.
 - **crkbd `process_record_user`** does two non-obvious things: (1) re-emits `KC_SCRL` / `KC_NUM` as
