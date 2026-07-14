@@ -46,7 +46,7 @@ The shared pieces:
 
 - **`users/jussaw/jussaw.h`** — the layer `enum` and every keycode alias (home-row mods, layer keys,
   Lower/Upper mod-taps). **`wrappers.h`** — the actual keymap content as per-layer, per-half **row
-  macros** (`JW_DEF_L1`…`JW_GAM_R3`). Physical matrices differ, so QMK cannot share one `keymaps[]`
+  macros** (`JS_DEF_L1`…`JS_GAM_R3`). Physical matrices differ, so QMK cannot share one `keymaps[]`
   array; instead each board feeds these row macros into its own `LAYOUT_*` via a
   `LAYOUT_*_wrapper(...)` indirection (forces macro expansion before the arg count is checked) and
   supplies only its own thumb/bottom row. **`jussaw.c`** — `process_record_user` (Game-layer `A`/`D`

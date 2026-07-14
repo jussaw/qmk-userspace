@@ -24,9 +24,9 @@
 //      on the Lower left half.
 //   2. It has only 2 right-thumb keys (no room for a Backspace thumb like the
 //      crkbd), so Backspace stays on the Default R1 edge in place of Delete.
-#define JW_LOW_L2_CHARY  KC_ESC,  S_D_MOD,  DPI_MOD,  MS_BTN2, MS_BTN1, DRGSCRL
-#define JW_LOW_L3_CHARY  KC_CAPS, S_D_RMOD, DPI_RMOD, MS_BTN4, MS_BTN5, SNIPING
-#define JW_DEF_R1_CHARY  KC_J,    KC_L,     KC_U,     KC_Y,    KC_SCLN, KC_BSPC
+#define JS_LOW_L2_CHARY  KC_ESC,  S_D_MOD,  DPI_MOD,  MS_BTN2, MS_BTN1, DRGSCRL
+#define JS_LOW_L3_CHARY  KC_CAPS, S_D_RMOD, DPI_RMOD, MS_BTN4, MS_BTN5, SNIPING
+#define JS_DEF_R1_CHARY  KC_J,    KC_L,     KC_U,     KC_Y,    KC_SCLN, KC_BSPC
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -43,9 +43,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    *                            `--------------------------'  `-----------------'
    */
   [_DEFAULT] = LAYOUT_wrapper(
-      JW_DEF_L1,       JW_DEF_R1_CHARY,
-      JW_DEF_L2,       JW_DEF_R2,
-      JW_DEF_L3,       JW_DEF_R3,
+      JS_DEF_L1,       JS_DEF_R1_CHARY,
+      JS_DEF_L2,       JS_DEF_R2,
+      JS_DEF_L3,       JS_DEF_R3,
                     KC_LCTL, LOWER,   KC_SPC,    KC_RSFT, UPPER
   ),
 
@@ -61,9 +61,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    *                            `--------------------------'  `-----------------'
    */
   [_LOWER] = LAYOUT_wrapper(
-      JW_LOW_L1,       JW_LOW_R1,
-      JW_LOW_L2_CHARY, JW_LOW_R2,
-      JW_LOW_L3_CHARY, JW_LOW_R3,
+      JS_LOW_L1,       JS_LOW_R1,
+      JS_LOW_L2_CHARY, JS_LOW_R2,
+      JS_LOW_L3_CHARY, JS_LOW_R3,
                     KC_LCTL, KC_TRNS, KC_LALT,   KC_RSFT, ADJUST
   ),
 
@@ -79,9 +79,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    *                            `--------------------------'  `-----------------'
    */
   [_UPPER] = LAYOUT_wrapper(
-      JW_UPP_L1,       JW_UPP_R1,
-      JW_UPP_L2,       JW_UPP_R2,
-      JW_UPP_L3,       JW_UPP_R3,
+      JS_UPP_L1,       JS_UPP_R1,
+      JS_UPP_L2,       JS_UPP_R2,
+      JS_UPP_L3,       JS_UPP_R3,
                     KC_LCTL, ADJUST,  KC_LALT,   KC_RSFT, KC_TRNS
   ),
 
@@ -97,9 +97,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    *                            `--------------------------'  `-----------------'
    */
   [_ADJUST] = LAYOUT_wrapper(
-      JW_ADJ_L1,       JW_ADJ_R1,
-      JW_ADJ_L2,       JW_ADJ_R2,
-      JW_ADJ_L3,       JW_ADJ_R3,
+      JS_ADJ_L1,       JS_ADJ_R1,
+      JS_ADJ_L2,       JS_ADJ_R2,
+      JS_ADJ_L3,       JS_ADJ_R3,
                     XXXXXXX, KC_TRNS, XXXXXXX,   XXXXXXX, KC_TRNS
   ),
 
@@ -115,9 +115,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    *                            `--------------------------'  `-----------------'
    */
   [_SETTINGS] = LAYOUT_wrapper(
-      JW_SET_L1,       JW_SET_R1,
-      JW_SET_L2,       JW_SET_R2,
-      JW_SET_L3,       JW_SET_R3,
+      JS_SET_L1,       JS_SET_R1,
+      JS_SET_L2,       JS_SET_R2,
+      JS_SET_L3,       JS_SET_R3,
                     XXXXXXX, XXXXXXX, XXXXXXX,   XXXXXXX, KC_TRNS
   ),
 
@@ -133,9 +133,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    *                            `--------------------------'  `-----------------'
    */
   [_GAME] = LAYOUT_wrapper(
-      JW_GAM_L1,       JW_GAM_R1,
-      JW_GAM_L2,       JW_GAM_R2,
-      JW_GAM_L3,       JW_GAM_R3,
+      JS_GAM_L1,       JS_GAM_R1,
+      JS_GAM_L2,       JS_GAM_R2,
+      JS_GAM_L3,       JS_GAM_R3,
                     KC_ESC,  KC_LALT, KC_SPC,    TG_GAME, XXXXXXX
   ),
 };
