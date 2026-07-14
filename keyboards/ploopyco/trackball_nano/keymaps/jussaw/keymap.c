@@ -47,8 +47,12 @@ bool led_update_user(led_t led_state) {
     }
 
     // when num lock is pressed, cycle dpi
+    // rising edge only: the crkbd's momentary num lock toggles the LED twice
+    // per keystroke, which would otherwise cycle the dpi by two steps
     if ( num_lock_state != led_state.num_lock ) {
-        cycle_dpi();
+        if ( led_state.num_lock ) {
+            cycle_dpi();
+        }
         num_lock_state = led_state.num_lock;
     }
 
